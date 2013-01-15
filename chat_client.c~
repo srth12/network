@@ -36,8 +36,13 @@ printf("%s",buf);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
-read(sockfd,buf,sizeof(buf));
+read(sockfd,buf,22);
 printf("output from server: %s\n",buf);
+bzero(&buf,sizeof(buf));
+printf("enter message to send\n");
+fgets(buf,255,stdin);
+if((n=write(sockfd,buf,sizeof(buf)))<0){
+printf("failed write teh message %d\n",n);exit(0);}
 
 }
 

@@ -10,7 +10,7 @@
 
 struct thread{
 char uname[7];int fd,u_no;
-char message[50];
+char * message;
 }user[9];
 
 int get_user_no(char * uname,int clifd){
@@ -23,14 +23,22 @@ pch=strtok(NULL,"-:");
 sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
 user[u].u_no=u;user[u].fd=clifd;
-printf("-::%d::-\n",user[u].fd);
+printf("-::%d::-\n",u);
 //updated till here
 return u;
 
 }
 
 //stores the message and return the user no to send the message
-
+int get_user_details(char * details){
+char * pch;int u;
+strtok(details,"-:");
+pch=strtok(NULL,"-:");
+sscanf(pch,"%d",&u);
+pch=strtok(NULL,"-:");
+user[u].message=pch;
+return u;
+}
 
 int no_of_users=0;
 bool user_check(char uname[5],char passwd[3]){
@@ -42,7 +50,8 @@ else return false;
 
 
 void* fn(void *newsockfd){
-char buffer[255];
+char buffer[255];int n;
+/*
 while(1){
 
 bzero(buffer,256);
@@ -62,6 +71,18 @@ if(strncmp(buffer,"eof",3) ==0) break;
    n = write(newsockfd,buf,strlen(buf));
      if (n < 0) error("ERROR writing to socket");
 
+}
+*/
+while(1){
+bzero(buffer,255);printf("sssssssss\n");
+fgets(buffer,256,newsockfd);
+printf("%s",buffer);
+if(n<0){printf("reading client message failed\n");return 0;}
+printf("succcccccccccccccc\n");
+/*
+int uno=get_user_details(buffer);
+n=write(user[uno].fd,user[uno].message,50);
+if(n<0){printf("writing message to client failed\n");return 0;} */
 }
 close(newsockfd);
 }
@@ -103,9 +124,10 @@ sscanf(str,"%s%s",&uname,&passwd);
 printf("user name and paswd rec is:%s,%s\n",uname,passwd);
 if(user_check(uname,passwd)){
 if((i=write(clifd,"successfully logged in",22))<0){printf("error writing file");exit(0);}
+get_user_no(uname,clifd);
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;
-get_user_no(uname,clifd);
+
 
 }
 else{if((i=write(clifd,"Invalid username and password",30))<0){printf("erroring uname and pawd failed");exit(0);}}

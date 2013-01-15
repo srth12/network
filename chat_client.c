@@ -26,7 +26,7 @@ exit(0);
 
 char buf[1024];
 while(1){
-int i;
+int i; 
 bzero(&buf,sizeof(&buf));
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading uname request failed\n");exit(0);}
 printf("%s",buf);
@@ -38,6 +38,11 @@ printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
 read(sockfd,buf,22);
 printf("output from server: %s\n",buf);
+bzero(&buf,sizeof(buf));
+printf("enter message to send\n");
+fgets(buf,255,stdin);
+if((n=write(sockfd,buf,sizeof(buf)))<0){
+printf("failed write teh message %d\n",n);exit(0);}
 
 }
 
