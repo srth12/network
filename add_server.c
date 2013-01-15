@@ -9,7 +9,7 @@ char buffer[255];bzero(buffer,256);
 int n=0;long arg1,arg2;
 n = read(newsockfd,buffer,255);
      if (n < 0) error("ERROR reading from socket");
-     printf("Here is the message: %s\n",buffer);
+     printf("Here is the message: %d,%s\n",newsockfd,buffer);
      sscanf(buffer,"%ld%ld",&arg1,&arg2); // read string as two integers
      printf("%ld,%ld",&arg1,&arg2);char buf[255];
      bzero((char *)&buf,sizeof(buf));

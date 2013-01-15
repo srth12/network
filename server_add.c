@@ -19,7 +19,7 @@ n = read(newsockfd,buffer,255);
 if(strlen(buffer) ==0) continue;
 
 if(strcmp(buffer,"eof") ==0) break;
-     printf("Here is the message: %s\n",buffer);
+     printf("Here is the:%d: message: %s\n",newsockfd,buffer);
      sscanf(buffer,"%ld%ld",&arg1,&arg2);
      //printf("%ld,%ld",arg1,arg2);
 	char buf[255];
