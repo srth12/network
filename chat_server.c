@@ -71,12 +71,13 @@ sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
 //adding from usr to message
 char temp[100];
-strcpy(temp,"From user-");
+
+snprintf(temp,sizeof(temp),"From user-%d\n",my_no[(int)newsockfd]);
 //strcat(temp,my_no[*(int*)newsockfd]);
 strcat(temp,pch);
 //snprintf(temp,sizeof(temp),"%s%s","From user-",my_no[*(int*)newsockfd]);
 printf("[%s]\n",temp);
-user[u].message=pch;
+user[u].message=temp;
 
 //
 //user[u].message=pch;
@@ -143,7 +144,7 @@ if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
 //logged_in_usrlist[no_of_users]=&uname;
 //for( q=0;q<=no_of_users;q++){printf("Logged in usrs:%s;",&logged_in_usrlist[q]);}
 
-printf("my_no=%s\n",logged_in_usrlist);
+//printf("my_no=%s\n",logged_in_usrlist);
 //if((i=write(clifd,logged_in_usrlist,100)<0)){printf("rclient list disp failded");return 0;}
 //write(clifd,logged_in_usrlist,sizeof(logged_in_usrlist));
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
