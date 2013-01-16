@@ -31,7 +31,7 @@ return u;
 
 //stores the message and return the user no to send the message
 int get_user_details(char * details){
-printf("!!!!!!!!!!,%s\n",details);
+//printf("!!!!!!!!!!,%s\n",details);
 char * pch;int u;
 strtok(details,"-:");
 pch=strtok(NULL,"-:");
@@ -52,14 +52,14 @@ else return false;
 
 void* fn(void *newsockfd){
 char buffer[255];int n;
-
+//printf("%d\n",(int*)newsockfd);
 while(1){
 
-memset(buffer,0,255);//printf("sssssssss\n");
+memset(buffer,0,255);//
 n=read(newsockfd,buffer,256);
-if(n< 0) {printf("Error in reading\n");}
+if(n< 0) {printf("Error in reading\n");break;}
 if(strlen(buffer)<=4){continue;}
-int uno;
+int uno;//printf("hihi-%s\n",buffer);
 //uno=get_user_details(buffer);
 //get_user_details defined here itself due to error
 char * pch;int u;n=strlen(buffer);
@@ -69,16 +69,16 @@ pch=strtok(NULL,"-:");
 sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
 user[u].message=pch;
-printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
+//printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
 n=write(user[u].fd,user[u].message,strlen(user[u].message));
 if(n<0 ) {printf("writing message to client failed\n");return 0;}
 //ends here
-printf("*%d*,%s\n",u,buffer);
+//printf("*%d*,%s\n",u,buffer);
 //if(n<0){printf("reading client message failed\n");return 0;}
 //printf("succcccccccccccccc\n");
 
 }
-printf("server closed for client%d\n",newsockfd);
+printf("server closed for client%d\n",(int)newsockfd);
 
 close(newsockfd);
 }
@@ -121,7 +121,7 @@ sscanf(str,"%s%s",&uname,&passwd);
 printf("user name and paswd rec is:%s,%s\n",uname,passwd);
 if(user_check(uname,passwd)){
 if((i=write(clifd,"successfully logged in",22))<0){printf("error writing file");exit(0);}
-get_user_no(uname,clifd);
+int p=get_user_no(uname,clifd);printf("p=%d\n",p);
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;
 

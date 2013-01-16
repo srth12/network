@@ -44,7 +44,9 @@ fgets(buf,255,stdin);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write teh message %d\n",n);exit(0);}
 bzero(&buf,sizeof(&buf));
+while(1){
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
-
+printf("%s\n",buf);
+}
 
 }
