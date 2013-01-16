@@ -7,7 +7,7 @@
 #include<strings.h>
 #include<string.h>
 #include<stdbool.h>
-
+char logged_in_usrlist[100];
 struct thread{
 char uname[7];int fd,u_no;
 char * message;
@@ -46,6 +46,7 @@ bool user_check(char uname[5],char passwd[3]){
 
 if(strncmp(uname,"user-1:",5)==0){if(strcmp(passwd,"sar")==0) return true; else return false; }
 else if(strncmp(uname,"user-2:",5)==0){if(strcmp(passwd,"sar")) return true; else return false; }
+else if(strncmp(uname,"user-3:",5)==0){if(strcmp(passwd,"sar")) return true; else return false; }
 else return false;
 }
 
@@ -106,7 +107,7 @@ return 0;}
 
 int n=listen(serfd,2);
 if(n<0){printf("error in listen\n");}
-int i=0;pthread_t pd[12];
+int i=0;pthread_t pd[12];int q;
 while(1){
 int i;
 int cli=sizeof(client);
@@ -122,6 +123,8 @@ sscanf(str,"%s%s",&uname,&passwd);
 printf("user name and paswd rec is:%s,%s\n",uname,passwd);
 if(user_check(uname,passwd)){
 if((i=write(clifd,"successfully logged in",22))<0){printf("error writing file");exit(0);}
+//logged_in_usrlist[no_of_users]=&uname;
+//for( q=0;q<=no_of_users;q++){printf("Logged in usrs:%s;",&logged_in_usrlist[q]);}
 int p=get_user_no(uname,clifd);printf("p=%d\n",p);
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;

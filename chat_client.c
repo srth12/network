@@ -38,15 +38,16 @@ printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
 read(sockfd,buf,22);
 printf("output from server: %s\n",buf);
+while(1){
 bzero(&buf,sizeof(buf));
 printf("enter message to send\n");
 fgets(buf,255,stdin);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write teh message %d\n",n);exit(0);}
-memset(buf,0,255);
-while(1){
+bzero(&buf,sizeof(&buf));
+//while(1){
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
-if(strlen(buf)!=0){printf("%s\n",buf);memset(buf,0,255);}
+printf("%s\n",buf);
+//}
 }
-
 }
