@@ -72,6 +72,7 @@ user[u].message=pch;
 //printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
 n=write(user[u].fd,user[u].message,strlen(user[u].message));
 if(n<0 ) {printf("writing message to client failed\n");return 0;}
+memset(buffer,0,255);
 //ends here
 //printf("*%d*,%s\n",u,buffer);
 //if(n<0){printf("reading client message failed\n");return 0;}
