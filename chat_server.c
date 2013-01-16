@@ -7,12 +7,12 @@
 #include<strings.h>
 #include<string.h>
 #include<stdbool.h>
-char logged_in_usrlist[100];
+char logged_in_usrlist[100];char ttt[100];
 struct thread{
 char uname[7];int fd,u_no;
 char * message;
 }user[9];
-
+int my_no[100];
 int get_user_no(char * uname,int clifd){
 // getting details of the user
 char * pch;int u;
@@ -69,7 +69,17 @@ pch=strtok(buffer,"-:");
 pch=strtok(NULL,"-:");
 sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
+//adding from usr to message
+char temp[100];
+strcpy(temp,"From user-");
+//strcat(temp,my_no[*(int*)newsockfd]);
+strcat(temp,pch);
+//snprintf(temp,sizeof(temp),"%s%s","From user-",my_no[*(int*)newsockfd]);
+printf("[%s]\n",temp);
 user[u].message=pch;
+
+//
+//user[u].message=pch;
 //printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
 n=write(user[u].fd,user[u].message,strlen(user[u].message));
 if(n<0 ) {printf("writing message to client failed\n");return 0;}
@@ -122,10 +132,20 @@ if((i=read(clifd,str,50))<0){printf("reading uname and pawd failed");return 0;}
 sscanf(str,"%s%s",&uname,&passwd);
 printf("user name and paswd rec is:%s,%s\n",uname,passwd);
 if(user_check(uname,passwd)){
-if((i=write(clifd,"successfully logged in",22))<0){printf("error writing file");exit(0);}
+	int p=get_user_no(uname,clifd);printf("p=%d\n",p);
+snprintf(uname,sizeof(uname),"user-%d\n",p);
+strcat(logged_in_usrlist,uname);
+my_no[clifd]=p;// adding current users id to global var
+
+strcpy(ttt,"successfully logged in : Logged in users");
+strcat(ttt,logged_in_usrlist);
+if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
 //logged_in_usrlist[no_of_users]=&uname;
 //for( q=0;q<=no_of_users;q++){printf("Logged in usrs:%s;",&logged_in_usrlist[q]);}
-int p=get_user_no(uname,clifd);printf("p=%d\n",p);
+
+printf("my_no=%s\n",logged_in_usrlist);
+//if((i=write(clifd,logged_in_usrlist,100)<0)){printf("rclient list disp failded");return 0;}
+//write(clifd,logged_in_usrlist,sizeof(logged_in_usrlist));
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;
 

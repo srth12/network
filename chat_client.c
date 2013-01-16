@@ -36,7 +36,7 @@ printf("%s",buf);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
-read(sockfd,buf,22);
+read(sockfd,buf,100);
 printf("output from server: %s\n",buf);
 while(1){
 bzero(&buf,sizeof(buf));
