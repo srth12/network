@@ -31,6 +31,7 @@ return u;
 
 //stores the message and return the user no to send the message
 int get_user_details(char * details){
+printf("!!!!!!!!!!,%s\n",details);
 char * pch;int u;
 strtok(details,"-:");
 pch=strtok(NULL,"-:");
@@ -51,42 +52,38 @@ else return false;
 
 void* fn(void *newsockfd){
 char buffer[255];int n;
-/*
+
 while(1){
 
-bzero(buffer,256);
-int n=0;
-long arg1,arg2;
-n = read(newsockfd,buffer,255);
-     if (n < 0){ printf("ERROR reading from socket");exit(0);}
-if(strlen(buffer) ==0) continue;
+memset(buffer,0,255);//printf("sssssssss\n");
+n=read(newsockfd,buffer,256);
+if(n< 0) {printf("Error in reading\n");}
+if(strlen(buffer)<=4){continue;}
+int uno;
+//uno=get_user_details(buffer);
+//get_user_details defined here itself due to error
+char * pch;int u;n=strlen(buffer);
+pch=strtok(buffer,"-:");
 
-if(strncmp(buffer,"eof",3) ==0) break;
-    // printf("Here is the:%d: message: %s\n",(int)newsockfd,buffer);
-     sscanf(buffer,"%ld%ld",&arg1,&arg2);
-     //printf("%ld,%ld",arg1,arg2);
-	char buf[255];
-     bzero((char *)&buf,sizeof(buf));
-     snprintf(buf,sizeof(buf),"%ld\n",arg1+arg2);
-   n = write(newsockfd,buf,strlen(buf));
-     if (n < 0) error("ERROR writing to socket");
-
-}
-*/
-while(1){
-bzero(buffer,255);printf("sssssssss\n");
-fgets(&buffer,256,newsockfd);
-printf("%s",buffer);
+pch=strtok(NULL,"-:");
+sscanf(pch,"%d",&u);
+pch=strtok(NULL,"-:");
+user[u].message=pch;
+printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
+n=write(user[u].fd,user[u].message,strlen(user[u].message));
+if(n<0 ) {printf("writing message to client failed\n");return 0;}
+//ends here
+printf("*%d*,%s\n",u,buffer);
 if(n<0){printf("reading client message failed\n");return 0;}
-printf("succcccccccccccccc\n");
-/*
-int uno=get_user_details(buffer);
-n=write(user[uno].fd,user[uno].message,50);
-if(n<0){printf("writing message to client failed\n");return 0;} */
+//printf("succcccccccccccccc\n");
+
 }
+printf("server closed for client%d\n",newsockfd);
+
 close(newsockfd);
 }
 
+//main program
 int main(){
 printf("hello2\n");
 int portno,serfd;
