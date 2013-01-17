@@ -38,8 +38,8 @@ fgets(buf,255,stdin);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
-read(sockfd,buf,100);if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
-printf("output from server: %s\n",buf);
+read(sockfd,buf,100);
+printf("output from server: %s\n",buf);if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
 while(1){
 bzero(&buf,sizeof(buf));
 printf("enter message to send\n");

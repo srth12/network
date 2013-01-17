@@ -45,7 +45,7 @@ int no_of_users=0;
 bool user_check(char uname[7],char passwd[3]){
 
 if(strncmp(uname,"user-2:",7)==0){if(strncmp(passwd,"sar",3)==0) { return true;} else return false; }
-else if(strncmp(uname,"user-1:",7)==0){if(strncmp(passwd,"sar",3)==0){ return true;} else{ printf("iiiii,%s\n\n",passwd);return false;} }
+else if(strncmp(uname,"user-1:",7)==0){if(strncmp(passwd,"sar",3)==0){ return true;} else{ return false;} }
 else if(strncmp(uname,"user-3:",7)==0){if(strncmp(passwd,"sar",3)==0) return true; else return false; }
 else return false;
 }
