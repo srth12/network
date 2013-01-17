@@ -44,9 +44,9 @@ return u;
 int no_of_users=0;
 bool user_check(char uname[5],char passwd[3]){
 
-if(strncmp(uname,"user-1:",5)==0){if(strcmp(passwd,"sar")==0) return true; else return false; }
-else if(strncmp(uname,"user-2:",5)==0){if(strcmp(passwd,"sar")) return true; else return false; }
-else if(strncmp(uname,"user-3:",5)==0){if(strcmp(passwd,"sar")) return true; else return false; }
+if(strncmp(uname,"user-1:",7)==0){if(strcmp(passwd,"sar")==0) return true; else return false; }
+else if(strncmp(uname,"user-2:",7)==0){if(strcmp(passwd,"sar")) return true; else return false; }
+else if(strncmp(uname,"user-3:",7)==0){if(strcmp(passwd,"sar")) return true; else return false; }
 else return false;
 }
 
@@ -138,7 +138,7 @@ snprintf(uname,sizeof(uname),"user-%d\n",p);
 strcat(logged_in_usrlist,uname);
 my_no[clifd]=p;// adding current users id to global var
 
-strcpy(ttt,"successfully logged in : Logged in users");
+strcpy(ttt,"successfully logged in :\n Logged in users :");
 strcat(ttt,logged_in_usrlist);
 if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
 //logged_in_usrlist[no_of_users]=&uname;
@@ -152,7 +152,7 @@ pthread_create(&pd[i],NULL,fn,(void*)clifd);
 
 
 }
-else{if((i=write(clifd,"Invalid username and password",30))<0){printf("erroring uname and pawd failed");exit(0);}}
+else{if((i=write(clifd,"Invalid username and password",30))<0){printf("erroring uname and pawd failed");exit(0);} close(clifd);}
 
 }
 }
