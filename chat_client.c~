@@ -7,76 +7,80 @@
 #include<strings.h>
 #include<string.h>
 
+void* reader(void* sockfd){
+int n;char buf[1024];
+while(1){
+	bzero(&buf,sizeof(buf));
+//printf("enter message to send\n");
+fgets(buf,255,stdin);if(strlen(buf)==0) continue;
+if((n=write(sockfd,buf,sizeof(buf)))<0){
+printf("failed write teh message %d\n",n);exit(0);}
 
-void* reader(void * sockfd){
-  char buf[255];int i;
-  while(1){
-if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
-if(strlen(buf)!=0){printf("%s\n",buf);memset(buf,0,255);}
-}
-  
-}
+}}
 
 void* writer(void* sockfd){
-  char buf[255];int i;
-  while(1){
-if((i=write(sockfd,buf,sizeof(buf)))<0){printf("writing message failed\n");exit(0);}
-if(strlen(buf)!=0){printf("%s\n",buf);memset(buf,0,255);}
+char buf[1024];
+bzero(&buf,sizeof(&buf));
+int n,i;//printf(":%d:\n",sockfd);
+while(1){
+bzero(&buf,sizeof(&buf));
+if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
+printf("%s\n",buf);bzero(&buf,sizeof(&buf));
 }
-  
-  
+
 }
 
 
 int main(){
+char buf[1024];
 
-int sockfd,portno,n;
+int i; 
+int sockfd,portno,n;struct sockaddr_in host;
+l:
 portno=atoi("55555");
 if((sockfd=socket(AF_INET,SOCK_STREAM,0))<0){
 printf("socket failed\n");}
 
-struct sockaddr_in host;
+
 bzero(&host,sizeof(host));
 host.sin_family=AF_INET;
 host.sin_port=htons(portno);
 inet_pton(AF_INET,"127.0.0.1",&host.sin_addr);// assigning server address;
+
 if(connect(sockfd,(struct sockaddr*)&host,sizeof(host))<0){
 printf("connection failed\n");
 exit(0);
 }
 
-char buf[1024];
 
-int i; 
 bzero(&buf,sizeof(&buf));
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading uname request failed\n");exit(0);}
 printf("%s",buf);
 bzero(&buf,sizeof(&buf));
-fgets(buf,255,stdin);
-printf("%s",buf);
+fgets(buf,255,stdin);// getting username and password from terminal
+//printf("%s",buf);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
-read(sockfd,buf,22);
-printf("output from server: %s\n",buf);
+read(sockfd,buf,100);
+printf("output from server: %s\n",buf);if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
+/*
+while(1){
 bzero(&buf,sizeof(buf));
 printf("enter message to send\n");
 fgets(buf,255,stdin);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed write teh message %d\n",n);exit(0);}
-//making it multi thread
-pthread_t pd[2];
-pthread_create(&pd[0],NULL,reader,(void*)sockfd);
-pthread_create(&pd[1],NULL,writer,(void*)sockfd);
-
-//multi therad end here
-
-memset(buf,0,255);
-/*
-while(1){
+bzero(&buf,sizeof(&buf));
+//while(1){
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
-if(strlen(buf)!=0){printf("%s\n",buf);memset(buf,0,255);}
-}*/
-pthread_join(
-
+printf("%s\n",buf);
+//}
+}
+*/
+pthread_t t1,t2;
+pthread_create(&t1,NULL,reader, (void*)sockfd);
+pthread_create(&t2,NULL,writer, (void*)sockfd);
+pthread_join(t1,NULL);
+pthread_join(t2,NULL);
 }
