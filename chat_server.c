@@ -51,8 +51,8 @@ else return false;
 }
 
 
-void* fn(void *newsockfd){
-char buffer[255];int n;
+void* fn(void *qw){
+char buffer[255];int n;int newsockfd=(int)qw;  
 //printf("%d\n",(int*)newsockfd);
 while(1){
 
@@ -71,8 +71,8 @@ sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
 //adding from usr to message
 char temp[100];
-
-snprintf(temp,sizeof(temp),"From user-%d\n",my_no[(int)newsockfd]);
+int y=3;printf("(%d)",newsockfd);
+snprintf(temp,sizeof(temp),"From user-%d\n",my_no[newsockfd]);
 //strcat(temp,my_no[*(int*)newsockfd]);
 strcat(temp,pch);
 //snprintf(temp,sizeof(temp),"%s%s","From user-",my_no[*(int*)newsockfd]);
@@ -130,7 +130,7 @@ if(clifd<0){printf("Errror in accept\n");exit(0);}
 if((i=write(clifd,"Enter username and password\n",30))<0){printf("requesting uname and pawd failed");return 0;}
 
 if((i=read(clifd,str,50))<0){printf("reading uname and pawd failed");return 0;}
-sscanf(str,"%s%s",&uname,&passwd);
+sscanf(str,"%s%s",uname,passwd);
 printf("user name and paswd rec is:%s,%s\n",uname,passwd);
 if(user_check(uname,passwd)){
 	int p=get_user_no(uname,clifd);printf("p=%d\n",p);
