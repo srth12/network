@@ -43,13 +43,47 @@ return u;
 
 int no_of_users=0;
 bool user_check(char uname[7],char passwd[3]){
-
+/*
 if(strncmp(uname,"user-2:",7)==0){if(strncmp(passwd,"sar",3)==0) { return true;} else return false; }
 else if(strncmp(uname,"user-1:",7)==0){if(strncmp(passwd,"sar",3)==0){ return true;} else{ return false;} }
 else if(strncmp(uname,"user-3:",7)==0){if(strncmp(passwd,"sar",3)==0) return true; else return false; }
 else return false;
+*/
+FILE *fp;
+fp=fopen("users.txt","r");
+if(fp==NULL){printf("File open failed\n");exit(0);}
+char i[50],j[50],line[50];
+
+while(fgets(line,50,fp) !=NULL){
+//printf("[:%s:]\n",line);
+sscanf(line,"%s%s",i,j);
+if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { return true;}  }
+
+}
+return false;
 }
 
+bool signup(char uname[50],char passwd[3]){
+	
+	char i[50],j[50],line[50];
+
+	while(fgets(line,50,fp) !=NULL){
+	//printf("[:%s:]\n",line);
+	sscanf(line,"%s%s",i,j);
+	if(strncmp(uname,i,7)==0){return false;  }
+		}
+		
+		else {
+		FILE *fp;
+		fp=fopen("users.txt","a");
+		if(fp==NULL){printf("File open failed\n");exit(0);}
+		snprintf(line,"%s%s",uname,passwd);
+		if(fputs(line,fp)==EOF){printf("Error in writing to file\n");}
+		return true;
+		
+	}
+		
+}
 
 void* fn(void *qw){
 char buffer[255];int n;int newsockfd=(int)qw;  
