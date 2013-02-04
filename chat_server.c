@@ -66,22 +66,24 @@ return false;
 bool signup(char uname[50],char passwd[3]){
 	
 	char i[50],j[50],line[50];
-
+	FILE *fp;
+		fp=fopen("users.txt","r");
+		if(fp==NULL){printf("File open failed\n");exit(0);}
 	while(fgets(line,50,fp) !=NULL){
 	//printf("[:%s:]\n",line);
 	sscanf(line,"%s%s",i,j);
 	if(strncmp(uname,i,7)==0){return false;  }
 		}
 		
-		else {
-		FILE *fp;
+		fclose(fp);
+		
 		fp=fopen("users.txt","a");
 		if(fp==NULL){printf("File open failed\n");exit(0);}
-		snprintf(line,"%s%s",uname,passwd);
+		snprintf(line,strlen(line),"%s%s",uname,passwd);
 		if(fputs(line,fp)==EOF){printf("Error in writing to file\n");}
 		return true;
 		
-	}
+		fclose(fp);
 		
 }
 
