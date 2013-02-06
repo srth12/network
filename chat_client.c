@@ -14,7 +14,7 @@ while(1){
 //printf("enter message to send\n");
 fgets(buf,255,stdin);if(strlen(buf)==0) continue;
 if((n=write(sockfd,buf,sizeof(buf)))<0){
-printf("failed write teh message %d\n",n);exit(0);}
+printf("failed send teh message %d\n",n);exit(0);}
 bzero(&buf,sizeof(buf));
 }}
 
@@ -32,7 +32,7 @@ printf("%s\n",buf);bzero(&buf,sizeof(&buf));
 
 
 int main(){
-char buf[1024];
+char buf[255];
 
 int i; 
 int sockfd,portno,n;struct sockaddr_in host;
@@ -51,18 +51,34 @@ if(connect(sockfd,(struct sockaddr*)&host,sizeof(host))<0){
 printf("connection failed\n");
 exit(0);
 }
-
-
-bzero(&buf,sizeof(&buf));
-if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading uname request failed\n");exit(0);}
-printf("%s",buf);
-bzero(&buf,sizeof(&buf));
-fgets(buf,255,stdin);// getting username and password from terminal
+// signup adding
+char sign[255];
+bzero(sign,sizeof(sign));
+if((i=recv(sockfd,sign,sizeof(sign),0))<0){printf("reading signup failed\n");exit(0);}
+printf("%s",sign);
+bzero(sign,sizeof(sign));
+fgets(sign,255,stdin);// getting signup mode from terminal
 //printf("%s",buf);
-if((n=write(sockfd,buf,sizeof(buf)))<0){
-printf("failed write %d\n",n);exit(0);}
-bzero(&buf,sizeof(buf));
-read(sockfd,buf,100);
+if((n=send(sockfd,sign,sizeof(sign),0))<0){
+printf("failed send signup %d\n",n);exit(0);}
+
+
+
+//signup ending
+
+memset(buf, 0,sizeof(buf));
+//if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading uname request failed\n");exit(0);}
+printf("Enter username and password: ");
+//bzero(&buf,sizeof(&buf));
+
+fgets(buf,sizeof(buf),stdin);// getting username and password from terminal
+
+printf("%s",buf);
+if((n=send(sockfd,buf,sizeof(buf),0))<0){
+printf("failed send %d\n",n);exit(0);}
+//bzero(&buf,sizeof(buf));
+memset(buf, 0,sizeof(buf));
+recv(sockfd,buf,sizeof(buf),0);
 printf("output from server: %s\n",buf);if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
 /*
 while(1){
@@ -70,7 +86,7 @@ bzero(&buf,sizeof(buf));
 printf("enter message to send\n");
 fgets(buf,255,stdin);
 if((n=write(sockfd,buf,sizeof(buf)))<0){
-printf("failed write teh message %d\n",n);exit(0);}
+printf("failed send teh message %d\n",n);exit(0);}
 bzero(&buf,sizeof(&buf));
 //while(1){
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}

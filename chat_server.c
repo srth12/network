@@ -7,6 +7,10 @@
 #include<strings.h>
 #include<string.h>
 #include<stdbool.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 char logged_in_usrlist[100];char ttt[100];
 struct thread{
 char uname[7];int fd,u_no;
@@ -160,21 +164,38 @@ int i;
 int cli=sizeof(client);
 int clifd;
 clifd=accept(serfd,(struct sockaddr *) &client,&cli);
-printf(":j:%d:j:\n",clifd);
-char uname[50],passwd[50];char str[255];
-if(clifd<0){printf("Errror in accept\n");exit(0);}
-if((i=write(clifd,"Enter username and password\n",30))<0){printf("requesting uname and pawd failed");return 0;}
+if(clifd<=0){printf("Errror in accept\n");exit(0);}
+//printf(":j:%d:j:\n",clifd);
+char uname[50],passwd[50];char str[255],mode_str[255];
+//signup
 
-if((i=read(clifd,str,50))<0){printf("reading uname and pawd failed");return 0;}
+
+if((i=write(clifd,"1. for signup, 2. for login..",255))<0){printf("requesting user mode failded");return 0;}printf("mo0000\n");
+if((i=read(clifd,mode_str,sizeof(mode_str)))<=0){printf("reading user mode failded\n");return 0;}
+int mode=atoi(mode_str);
+printf("mode:%d\n",mode);
+
+
+
+//signup ends here
+
+//if((i=write(clifd,"Enter username and password\n",30))<0){printf("requesting uname and pawd failed");return 0;}
+//memset(str, 0,sizeof(str));
+//FILE *fin,*fout;fin=fdopen(clifd,"r");
+//fseek(fin,0,SEEK_SET);
+
+if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
+printf("u and p is:%s,%d\n",str,strlen(str));
 sscanf(str,"%s%s",uname,passwd);
-printf("user name and paswd rec is:%s,%s\n",uname,passwd);
+
+//printf("user name and paswd rec is:%s,%d\n",str,strlen(str));
 if(user_check(uname,passwd)){
 	int p=get_user_no(uname,clifd);printf("p=%d\n",p);
 snprintf(uname,sizeof(uname),"user-%d\n",p);
 strcat(logged_in_usrlist,uname);
 my_no[clifd]=p;// adding current users id to global var
 
-strcpy(ttt,"successfully logged in :\n Logged in users :");
+strcpy(ttt,"successfully logged in :\n Logged in users :\n");
 strcat(ttt,logged_in_usrlist);
 if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
 //logged_in_usrlist[no_of_users]=&uname;
