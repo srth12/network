@@ -175,7 +175,15 @@ if((i=read(clifd,mode_str,sizeof(mode_str)))<=0){printf("reading user mode faild
 int mode=atoi(mode_str);
 printf("mode:%d\n",mode);
 
+if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
+printf("u and p is:%s,%d\n",str,strlen(str));
+sscanf(str,"%s%s",uname,passwd);
 
+switch(mode){
+case 1: 
+if(signup(uname,passwd)){printf("successfully signed up\n");}
+else{printf("failed to signup\n");}
+}
 
 //signup ends here
 
@@ -184,9 +192,10 @@ printf("mode:%d\n",mode);
 //FILE *fin,*fout;fin=fdopen(clifd,"r");
 //fseek(fin,0,SEEK_SET);
 
-if((i=read(clifd,str,strlen(str)))<=0){printf("reading uname and pawd failed");return 0;}
+if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
 printf("u and p is:%s,%d\n",str,strlen(str));
 sscanf(str,"%s%s",uname,passwd);
+
 //printf("user name and paswd rec is:%s,%d\n",str,strlen(str));
 if(user_check(uname,passwd)){
 	int p=get_user_no(uname,clifd);printf("p=%d\n",p);

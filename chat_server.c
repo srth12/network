@@ -67,7 +67,7 @@ if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { return true;}  }
 return false;
 }
 
-bool signup(char uname[50],char passwd[3]){
+bool signup(char uname[50],char passwd[3],char str[50]){
 	
 	char i[50],j[50],line[50];
 	FILE *fp;
@@ -83,8 +83,8 @@ bool signup(char uname[50],char passwd[3]){
 		
 		fp=fopen("users.txt","a");
 		if(fp==NULL){printf("File open failed\n");exit(0);}
-		snprintf(line,strlen(line),"%s%s",uname,passwd);
-		if(fputs(line,fp)==EOF){printf("Error in writing to file\n");}
+		//snprintf(line,strlen(line),"%s%s",uname,passwd);
+		if(fputs(str,fp)==EOF){printf("Error in writing to file\n");}
 		return true;
 		
 		fclose(fp);
@@ -175,7 +175,15 @@ if((i=read(clifd,mode_str,sizeof(mode_str)))<=0){printf("reading user mode faild
 int mode=atoi(mode_str);
 printf("mode:%d\n",mode);
 
+if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
+printf("u and p is:%s,%d\n",str,strlen(str));
+sscanf(str,"%s%s",uname,passwd);
 
+switch(mode){
+case 1: 
+if(signup(uname,passwd,str)){printf("successfully signed up\n");}
+else{printf("failed to signup\n");}
+}
 
 //signup ends here
 
