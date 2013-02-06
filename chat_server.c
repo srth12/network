@@ -67,29 +67,56 @@ if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { return true;}  }
 return false;
 }
 
-bool signup(char uname[50],char passwd[3],char str[50]){
+
+bool signup(char uname[50],char passwd[55]){
+	
+	char i[50],j[50],line[50];FILE *fp;
+	fp=fopen("users.txt","w");
+	putc('c',fp);
+	
+		
+}
+
+/*
+bool signup(char uname[50],char passwd[3],char str[255]){
 	
 	char i[50],j[50],line[50];
 	FILE *fp;
-		fp=fopen("users.txt","r");
-		if(fp==NULL){printf("File open failed\n");exit(0);}
+		fp=fopen("users.txt","w+");
+		 int kk=fputs("hhhhh\n",fp);
+		 printf("(%d)\n",kk);
+		if(fp==NULL){printf("File open failed\n");return false;}
 	while(fgets(line,50,fp) !=NULL){
-	//printf("[:%s:]\n",line);
+	printf("[:%s:]\n",line);
 	sscanf(line,"%s%s",i,j);
 	if(strncmp(uname,i,7)==0){return false;  }
 		}
+		//fclose(fp);
+		//fseek(fp,0,SEEK_SET);
 		
-		fclose(fp);
 		
-		fp=fopen("users.txt","a");
-		if(fp==NULL){printf("File open failed\n");exit(0);}
+		//fw=fopen("users.txt","a");
+		//if(fw==NULL){printf("File open failed\n");return false;}
 		//snprintf(line,strlen(line),"%s%s",uname,passwd);
-		if(fputs(str,fp)==EOF){printf("Error in writing to file\n");}
-		return true;
+		//fseek(fp,0,SEEK_END);
+		
+		printf("[string going to write to file issss:%s:]\n",uname);
+		//if(putc('a',fp)>0){ 
+		
+		if(fputs(uname,fp)<0){printf("Error in writing to file\n");return false;
+		//if(fprintf(fp,"%s",uname)==EOF){printf("Error in writing to file\n");return false;
+		}
+		else{ return true; fputs(uname,fp);
+		
+		fclose(fp);}
+		
+		 fputs(uname,fp);
 		
 		fclose(fp);
 		
 }
+
+*/
 
 void* fn(void *qw){
 char buffer[255];int n;int newsockfd=(int)qw;  
@@ -126,9 +153,7 @@ n=write(user[u].fd,user[u].message,strlen(user[u].message));
 if(n<0 ) {printf("writing message to client failed\n");return 0;}
 memset(buffer,0,255);
 //ends here
-//printf("*%d*,%s\n",u,buffer);
-//if(n<0){printf("reading client message failed\n");return 0;}
-//printf("succcccccccccccccc\n");
+
 
 }
 printf("server closed for client%d\n",(int)newsockfd);
@@ -159,6 +184,7 @@ return 0;}
 int n=listen(serfd,2);
 if(n<0){printf("error in listen\n");}
 int i=0;pthread_t pd[12];int q;
+u:
 while(1){
 int i;
 int cli=sizeof(client);
@@ -170,7 +196,7 @@ char uname[50],passwd[50];char str[255],mode_str[255];
 //signup
 
 
-if((i=write(clifd,"1. for signup, 2. for login..",255))<0){printf("requesting user mode failded");return 0;}printf("mo0000\n");
+if((i=write(clifd,"1. for signup, 2. for login..\n",255))<0){printf("requesting user mode failded");return 0;}printf("mo0000\n");
 if((i=read(clifd,mode_str,sizeof(mode_str)))<=0){printf("reading user mode failded\n");return 0;}
 int mode=atoi(mode_str);
 printf("mode:%d\n",mode);
@@ -181,22 +207,27 @@ sscanf(str,"%s%s",uname,passwd);
 
 switch(mode){
 case 1: 
-if(signup(uname,passwd,str)){printf("successfully signed up\n");}
-else{printf("failed to signup\n");}
+if(signup(uname,passwd)){printf("successfully signed up\n");
+int p=get_user_no(uname,clifd);printf("p=%d\n",p);
+snprintf(uname,sizeof(uname),"user-%d\n",p);
+strcat(logged_in_usrlist,uname);
+my_no[clifd]=p;// adding current users id to global var
+
+strcpy(ttt,"successfully Signed up :\n Logged in users :\n");
+strcat(ttt,logged_in_usrlist);
+if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
+
+pthread_create(&pd[i],NULL,fn,(void*)clifd);
+++i;++no_of_users;
+goto u;
+}
+else{printf("failed to signup\n");goto u;}
+default:break;
 }
 
 //signup ends here
 
-//if((i=write(clifd,"Enter username and password\n",30))<0){printf("requesting uname and pawd failed");return 0;}
-//memset(str, 0,sizeof(str));
-//FILE *fin,*fout;fin=fdopen(clifd,"r");
-//fseek(fin,0,SEEK_SET);
 
-if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
-printf("u and p is:%s,%d\n",str,strlen(str));
-sscanf(str,"%s%s",uname,passwd);
-
-//printf("user name and paswd rec is:%s,%d\n",str,strlen(str));
 if(user_check(uname,passwd)){
 	int p=get_user_no(uname,clifd);printf("p=%d\n",p);
 snprintf(uname,sizeof(uname),"user-%d\n",p);
@@ -206,12 +237,8 @@ my_no[clifd]=p;// adding current users id to global var
 strcpy(ttt,"successfully logged in :\n Logged in users :\n");
 strcat(ttt,logged_in_usrlist);
 if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
-//logged_in_usrlist[no_of_users]=&uname;
-//for( q=0;q<=no_of_users;q++){printf("Logged in usrs:%s;",&logged_in_usrlist[q]);}
 
-//printf("my_no=%s\n",logged_in_usrlist);
-//if((i=write(clifd,logged_in_usrlist,100)<0)){printf("rclient list disp failded");return 0;}
-//write(clifd,logged_in_usrlist,sizeof(logged_in_usrlist));
+
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;
 

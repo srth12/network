@@ -68,12 +68,12 @@ printf("failed send signup %d\n",n);exit(0);}
 
 memset(buf, 0,sizeof(buf));
 //if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading uname request failed\n");exit(0);}
-printf("Enter username and password: ");
+printf("Enter username and password:\n");
 //bzero(&buf,sizeof(&buf));
 
 fgets(buf,sizeof(buf),stdin);// getting username and password from terminal
 
-printf("%s",buf);
+//printf("%s",buf);
 if((n=send(sockfd,buf,sizeof(buf),0))<0){
 printf("failed send %d\n",n);exit(0);}
 //bzero(&buf,sizeof(buf));

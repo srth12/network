@@ -71,7 +71,9 @@ memset(buf, 0,sizeof(buf));
 printf("Enter username and password: ");
 //bzero(&buf,sizeof(&buf));
 
-scanf("%s",buf);// getting username and password from terminal
+fgets(buf,sizeof(buf),stdin);// getting username and password from terminal
+
+//printf("%s",buf);
 if((n=send(sockfd,buf,sizeof(buf),0))<0){
 printf("failed send %d\n",n);exit(0);}
 //bzero(&buf,sizeof(buf));

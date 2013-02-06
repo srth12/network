@@ -1,3 +1,0 @@
-user-1: sar
-user-2: sar
-user-3: sar
