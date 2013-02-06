@@ -68,55 +68,25 @@ return false;
 }
 
 
-bool signup(char uname[50],char passwd[55]){
+
+bool signup(char uname[50],char passwd[3]){
 	
-	char i[50],j[50],line[50];FILE *fp;
-	fp=fopen("users.txt","a");
-	putc('c',fp);
+	FILE *fp;char buf[55];
+	fp=fopen("users.txt","r");if(fp==NULL){printf("File open failed\n");return 0;}
+	while(fgets(buf,sizeof(buf),fp)!=NULL)
+	printf("%s",buf);
+	fclose(fp);
+	FILE *pd;
+	char l[55]="user-8: sar";
 	
+	pd=fopen("users.txt","a");
+	fputs(l,pd);
+	//fputs("user-2: sar",pd);
+		
 		
 }
 
-/*
-bool signup(char uname[50],char passwd[3],char str[255]){
-	
-	char i[50],j[50],line[50];
-	FILE *fp;
-		fp=fopen("users.txt","w+");
-		 int kk=fputs("hhhhh\n",fp);
-		 printf("(%d)\n",kk);
-		if(fp==NULL){printf("File open failed\n");return false;}
-	while(fgets(line,50,fp) !=NULL){
-	printf("[:%s:]\n",line);
-	sscanf(line,"%s%s",i,j);
-	if(strncmp(uname,i,7)==0){return false;  }
-		}
-		//fclose(fp);
-		//fseek(fp,0,SEEK_SET);
-		
-		
-		//fw=fopen("users.txt","a");
-		//if(fw==NULL){printf("File open failed\n");return false;}
-		//snprintf(line,strlen(line),"%s%s",uname,passwd);
-		//fseek(fp,0,SEEK_END);
-		
-		printf("[string going to write to file issss:%s:]\n",uname);
-		//if(putc('a',fp)>0){ 
-		
-		if(fputs(uname,fp)<0){printf("Error in writing to file\n");return false;
-		//if(fprintf(fp,"%s",uname)==EOF){printf("Error in writing to file\n");return false;
-		}
-		else{ return true; fputs(uname,fp);
-		
-		fclose(fp);}
-		
-		 fputs(uname,fp);
-		
-		fclose(fp);
-		
-}
 
-*/
 
 void* fn(void *qw){
 char buffer[255];int n;int newsockfd=(int)qw;  
@@ -205,9 +175,34 @@ if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");r
 printf("u and p is:%s,%d\n",str,strlen(str));
 sscanf(str,"%s%s",uname,passwd);
 
+//bool
+char line[50];char u[50];FILE *fp;
 switch(mode){
 case 1: 
-if(signup(uname,passwd)){printf("successfully signed up\n");
+
+
+	
+		fp=fopen("users.txt","r");
+		if(fp==NULL){printf("File open failed\n");exit(0);}
+	while(fgets(line,50,fp) !=NULL){
+	//printf("[:%s:]\n",line);
+	sscanf(line,"%s",u);
+	if(strncmp(uname,u,7)==0){printf("failed to signup\n");if((i=write(clifd,"username already exist",22))<0){printf("error writing file");exit(0);}
+	close(clifd);goto u;  }
+		}
+		
+		fclose(fp);
+		
+		fp=fopen("users.txt","a");
+		if(fp==NULL){printf("File open failed\n");exit(0);}
+		//snprintf(line,strlen(line),"%s%s",uname,passwd);
+		if(fputs(str,fp)==EOF){printf("Error in writing to file\n");}
+		
+		
+		fclose(fp);
+
+//bool
+//if(signup(uname,passwd)){printf("successfully signed up\n");
 int p=get_user_no(uname,clifd);printf("p=%d\n",p);
 snprintf(uname,sizeof(uname),"user-%d\n",p);
 strcat(logged_in_usrlist,uname);
@@ -220,10 +215,11 @@ if((i=write(clifd,ttt,100))<0){printf("error writing file");exit(0);}
 pthread_create(&pd[i],NULL,fn,(void*)clifd);
 ++i;++no_of_users;
 goto u;
-}
-else{printf("failed to signup\n");goto u;}
+
+
 default:break;
 }
+
 
 //signup ends here
 

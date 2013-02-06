@@ -79,7 +79,9 @@ printf("failed send %d\n",n);exit(0);}
 //bzero(&buf,sizeof(buf));
 memset(buf, 0,sizeof(buf));
 recv(sockfd,buf,sizeof(buf),0);
-printf("output from server: %s\n",buf);if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
+printf("output from server: %s\n",buf);
+if(strncmp(buf,"Invalid username and password",29)==0){goto l;}
+else if(strncmp(buf,"username already exist",22)==0){goto l;}
 /*
 while(1){
 bzero(&buf,sizeof(buf));
