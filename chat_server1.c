@@ -61,10 +61,9 @@ char i[50],j[50],line[50];
 while(fgets(line,50,fp) !=NULL){
 //printf("[:%s:]\n",line);
 sscanf(line,"%s%s",i,j);
-if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { fclose(fp); return true;}  }
+if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { return true;}  }
 
 }
-fclose(fp);
 return false;
 }
 
@@ -91,62 +90,13 @@ bool signup(char uname[50],char passwd[3]){
 
 void* fn(void *qw){
 char buffer[255];int n;int newsockfd=(int)qw;  
-
+//printf("%d\n",(int*)newsockfd);
 while(1){
-start:
+
 memset(buffer,0,255);//
 n=read(newsockfd,buffer,256);
 if(n< 0) {printf("Error in reading\n");break;}
 if(strlen(buffer)<=4){continue;}
-printf("Received message is:%s\n",buffer);
-//block users
-char ser[50],blo[50],username[50];
-if(strncmp(buffer,"Server:",7)==0){
-sscanf(buffer,"%s%s%s",ser,blo,username);
-sscanf(buffer,"%s%s%s",ser,blo,username);
-printf("blocking user:%s,%d\n",username,my_no[newsockfd]);
-
-//fffffffffffff
-	char bkd_usr[50],u[50],filename[50];FILE *fp;
-	snprintf(filename,sizeof(filename),&my_no[newsockfd]);
-	printf("file is:%s\n",filename);
-	fp=fopen(filename,"a+");
-		if(fp==NULL){printf("File open failed at 1\n");exit(0);}
-	while(fgets(bkd_usr,50,fp) !=NULL){
-	//printf("[:%s:]\n",line);
-	sscanf(bkd_usr,"%s",u);
-	if(strncmp(username,u,7)==0){printf("failed to signup\n");
-	//if((i=write(newsockfd,"username already blocked",24))<0){
-	//printf("error writing file");exit(0);}
-	printf("username already blocked\n");
-	goto start; }
-		}
-		
-		fclose(fp);
-		
-		fp=fopen(filename,"a");
-		if(fp==NULL){printf("File open failed\n");exit(0);}
-		//snprintf(line,strlen(line),"%s%s",uname,passwd);
-		strcat(username,"\n");
-		if(fputs(username,fp)==EOF){printf("Error in writing to file\n");}
-		
-		
-		fclose(fp);
-
-
-
-
-//ffffffffffff
-continue;
-
-}
-
-
-
-
-
-//block users
-
 int uno;//printf("hihi-%s\n",buffer);
 //uno=get_user_details(buffer);
 //get_user_details defined here itself due to error
@@ -154,31 +104,11 @@ char * pch;int u;n=strlen(buffer);
 pch=strtok(buffer,"-:");
 
 pch=strtok(NULL,"-:");
-sscanf(pch,"%d",&u);printf("(strtok:%d)",u);
+sscanf(pch,"%d",&u);
 pch=strtok(NULL,"-:");
 //adding from usr to message
 char temp[100];
 int y=3;printf("(%d)",newsockfd);
-//blockkkkkk
-FILE *fp;char bkd_usr[50],usr[50],screen[50];
-fp=fopen(&u,"r");
-snprintf(screen,sizeof(screen),"user-%d:\n",my_no[newsockfd]);
-printf("(strtok merged:%s)",screen);
-if(fp==NULL){printf("File open failed\n");exit(0);}
-	while(fgets(bkd_usr,50,fp) !=NULL){
-	
-	sscanf(bkd_usr,"%s",usr);printf("[at block:%s,%d:]\n",bkd_usr,my_no[newsockfd]);
-	//snprintf(my_,strlen(line),"%s%s",uname,passwd);
-	if(strncmp(screen,usr,7)==0){printf("failed to signup\n");
-	//if((i=write(newsockfd,"username already blocked",24))<0){
-	//printf("error writing file");exit(0);}
-	
-	goto start; }
-		}
-
-
-
-//blockkkkkkkk
 snprintf(temp,sizeof(temp),"From user-%d\n",my_no[newsockfd]);
 //strcat(temp,my_no[*(int*)newsockfd]);
 strcat(temp,pch);
