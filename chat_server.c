@@ -108,7 +108,7 @@ printf("blocking user:%s,%d\n",username,my_no[newsockfd]);
 
 //fffffffffffff
 	char bkd_usr[50],u[50],filename[50];FILE *fp;
-	snprintf(filename,sizeof(filename),&my_no[newsockfd]);
+	snprintf(filename,sizeof(filename),"%d",my_no[newsockfd]);
 	printf("file is:%s\n",filename);
 	fp=fopen(filename,"a+");
 		if(fp==NULL){printf("File open failed at 1\n");exit(0);}
@@ -244,7 +244,7 @@ int mode=atoi(mode_str);
 printf("mode:%d\n",mode);
 
 if((i=read(clifd,str,sizeof(str)))<=0){printf("reading uname and pawd failed");return 0;}
-printf("u and p is:%s,%d\n",str,strlen(str));
+//printf("u and p is:%s,%d\n",str,strlen(str));
 sscanf(str,"%s%s",uname,passwd);
 
 //bool
