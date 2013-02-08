@@ -14,7 +14,7 @@
 char logged_in_usrlist[100];char ttt[100];
 struct thread{
 char uname[7];int fd,u_no;
-char * message;
+char *message;
 }user[9];
 int my_no[100];
 int get_user_no(char * uname,int clifd){
@@ -36,7 +36,7 @@ return u;
 //stores the message and return the user no to send the message
 int get_user_details(char * details){
 //printf("!!!!!!!!!!,%s\n",details);
-char * pch;int u;
+char * pch;int u;bzero(pch,sizeof(pch));
 strtok(details,"-:");
 pch=strtok(NULL,"-:");
 sscanf(pch,"%d",&u);
@@ -61,9 +61,10 @@ char i[50],j[50],line[50];
 while(fgets(line,50,fp) !=NULL){
 //printf("[:%s:]\n",line);
 sscanf(line,"%s%s",i,j);
-if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { return true;}  }
+if(strncmp(uname,i,7)==0){if(strncmp(passwd,j,3)==0) { fclose(fp); return true;}  }
 
 }
+fclose(fp);
 return false;
 }
 
@@ -90,13 +91,62 @@ bool signup(char uname[50],char passwd[3]){
 
 void* fn(void *qw){
 char buffer[255];int n;int newsockfd=(int)qw;  
-//printf("%d\n",(int*)newsockfd);
-while(1){
 
+while(1){
+start:
 memset(buffer,0,255);//
 n=read(newsockfd,buffer,256);
 if(n< 0) {printf("Error in reading\n");break;}
 if(strlen(buffer)<=4){continue;}
+printf("Received message is:%s\n",buffer);
+//block users
+char ser[50],blo[50],username[50];
+if(strncmp(buffer,"Server:",7)==0){
+sscanf(buffer,"%s%s%s",ser,blo,username);
+sscanf(buffer,"%s%s%s",ser,blo,username);
+printf("blocking user:%s,%d\n",username,my_no[newsockfd]);
+
+//fffffffffffff
+	char bkd_usr[50],u[50],filename[50];FILE *fp;
+	snprintf(filename,sizeof(filename),"%d",my_no[newsockfd]);
+	printf("file is:%s\n",filename);
+	fp=fopen(filename,"a+");
+		if(fp==NULL){printf("File open failed at 1\n");exit(0);}
+	while(fgets(bkd_usr,50,fp) !=NULL){
+	//printf("[:%s:]\n",line);
+	sscanf(bkd_usr,"%s",u);
+	if(strncmp(username,u,7)==0){printf("failed to signup\n");
+	//if((i=write(newsockfd,"username already blocked",24))<0){
+	//printf("error writing file");exit(0);}
+	printf("username already blocked\n");
+	goto start; }
+		}
+		
+		fclose(fp);
+		
+		fp=fopen(filename,"a");
+		if(fp==NULL){printf("File open failed\n");exit(0);}
+		//snprintf(line,strlen(line),"%s%s",uname,passwd);
+		strcat(username,"\n");
+		if(fputs(username,fp)==EOF){printf("Error in writing to file\n");}
+		
+		
+		fclose(fp);
+
+
+
+
+//ffffffffffff
+continue;
+
+}
+
+
+
+
+
+//block users
+
 int uno;//printf("hihi-%s\n",buffer);
 //uno=get_user_details(buffer);
 //get_user_details defined here itself due to error
@@ -104,21 +154,47 @@ char * pch;int u;n=strlen(buffer);
 pch=strtok(buffer,"-:");
 
 pch=strtok(NULL,"-:");
-sscanf(pch,"%d",&u);
+sscanf(pch,"%d",&u);printf("(strtok:%d)",u);
 pch=strtok(NULL,"-:");
 //adding from usr to message
 char temp[100];
 int y=3;printf("(%d)",newsockfd);
+//blockkkkkk
+FILE *fp;char bkd_usr[50],usr[50],screen[50];
+fp=fopen(&u,"a");
+snprintf(screen,sizeof(screen),"user-%d:\n",my_no[newsockfd]);
+printf("(strtok merged:%s)",screen);
+if(fp==NULL){printf("File open failed\n");exit(0);}
+	while(fgets(bkd_usr,50,fp) !=NULL){
+	
+	sscanf(bkd_usr,"%s",usr);printf("[at block:%s,%d:]\n",bkd_usr,my_no[newsockfd]);
+	//snprintf(my_,strlen(line),"%s%s",uname,passwd);
+	if(strncmp(screen,usr,7)==0){printf("you can't send message to this user\n");
+	n=write(newsockfd,"you can't send message to this user'\n",strlen("you can't send message to this user\n"));
+	if(n<0 ) {printf("writing message to client failed\n");return 0;}
+	//if((i=write(newsockfd,"username already blocked",24))<0){
+	//printf("error writing file");exit(0);}
+	
+	goto start; }
+		}
+
+
+
+//blockkkkkkkk
+//bzero(temp,100);
 snprintf(temp,sizeof(temp),"From user-%d\n",my_no[newsockfd]);
 //strcat(temp,my_no[*(int*)newsockfd]);
 strcat(temp,pch);
 //snprintf(temp,sizeof(temp),"%s%s","From user-",my_no[*(int*)newsockfd]);
 printf("[%s]\n",temp);
+
+//memset(user[u].message,0,49);
 user[u].message=temp;
 
 //
 //user[u].message=pch;
 //printf("%d,%s,%d,okk\n",user[u].fd,user[u].message,n);
+
 n=write(user[u].fd,user[u].message,strlen(user[u].message));
 if(n<0 ) {printf("writing message to client failed\n");return 0;}
 memset(buffer,0,255);
@@ -187,7 +263,8 @@ case 1:
 	while(fgets(line,50,fp) !=NULL){
 	//printf("[:%s:]\n",line);
 	sscanf(line,"%s",u);
-	if(strncmp(uname,u,7)==0){printf("failed to signup\n");if((i=write(clifd,"username already exist",22))<0){printf("error writing file");exit(0);}
+	if(strncmp(uname,u,7)==0){printf("failed to signup\n");if((i=write(clifd,"username already exist",22))<0){
+	printf("error writing file");exit(0);}
 	close(clifd);goto u;  }
 		}
 		

@@ -10,22 +10,22 @@
 void* reader(void* qw){int sockfd=(int) qw;
 int n;char buf[1024];printf("(%d)",sockfd);
 while(1){
-	bzero(&buf,sizeof(buf));
+	bzero(&buf,sizeof(buf));memset(buf,0,sizeof(buf));
 //printf("enter message to send\n");
 fgets(buf,255,stdin);if(strlen(buf)==0) continue;
 if((n=write(sockfd,buf,sizeof(buf)))<0){
 printf("failed send teh message %d\n",n);exit(0);}
-bzero(&buf,sizeof(buf));
+bzero(&buf,sizeof(buf));memset(buf,0,sizeof(buf));
 }}
 
 void* writer(void* sockfd){
 char buf[1024];
-bzero(&buf,sizeof(&buf));
+bzero(&buf,sizeof(&buf));memset(buf,0,sizeof(buf));
 int n,i;//printf(":%d:\n",sockfd);
 while(1){
-bzero(&buf,sizeof(&buf));
+bzero(&buf,sizeof(&buf));memset(buf,0,sizeof(buf));
 if((i=read(sockfd,buf,sizeof(buf)))<0){printf("reading message failed\n");exit(0);}
-printf("%s\n",buf);bzero(&buf,sizeof(&buf));
+printf("%s\n",buf);bzero(&buf,sizeof(&buf));memset(buf,0,sizeof(buf));
 }
 
 }

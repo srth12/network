@@ -169,7 +169,9 @@ if(fp==NULL){printf("File open failed\n");exit(0);}
 	
 	sscanf(bkd_usr,"%s",usr);printf("[at block:%s,%d:]\n",bkd_usr,my_no[newsockfd]);
 	//snprintf(my_,strlen(line),"%s%s",uname,passwd);
-	if(strncmp(screen,usr,7)==0){printf("failed to signup\n");
+	if(strncmp(screen,usr,7)==0){printf("you can't send message to this user'\n");
+	n=write(newsockfd,"you can't send message to this user'\n",strlen("you can't send message to this user'\n"));
+	if(n<0 ) {printf("writing message to client failed\n");return 0;}
 	//if((i=write(newsockfd,"username already blocked",24))<0){
 	//printf("error writing file");exit(0);}
 	
