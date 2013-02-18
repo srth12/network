@@ -43,7 +43,7 @@ if(clifd<=0){printf("Errror in accept\n");exit(0);}
 
 }
 
-int con_server(char domain[50],char uri[50],int portno){
+int con_server(char domain[50],char uri[50],char protocol_type[50]){
 
 
 char buf[1024000];
@@ -58,7 +58,8 @@ memset(&hints, 0, sizeof hints);
 hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
 hints.ai_socktype = SOCK_STREAM;
 hints.ai_flags=AI_CANONNAME;
-if ((rv = getaddrinfo(domain,"https", &hints, &servinfo)) != 0) {
+
+if ((rv = getaddrinfo(domain,protocol_type, &hints, &servinfo)) != 0) {
 fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 exit(1);
 }
@@ -99,6 +100,46 @@ int main(int argc,char **argv){
 		printf("input req is :%s\n",buf);
 		strcpy(dup,buf);
 		char *pch;char domain[50],uri[50],http[50];int port;
+		//newly adding
+		char req_type[50],dom[50],protocol[50],protocol_type[50];
+		if(sscanf(buf,"%s%s%s",req_type,dom,protocol)==EOF)
+		{i=write(clifd,"HTTP Error 400 Bad request\n",strlen("HTTP Error 400 Bad request\n"));
+	if(i<0){printf("writing to client failed\n");exit(0);} }
+	else{
+	if(strncasecmp(dom,"http://",7)==0 || strncasecmp(dom,"https://",8)==0 ){
+	pch=strtok(dom,":");strcpy(protocol_type,pch);pch=strtok(NULL,"/");strcpy(domain,pch);
+	pch=strtok(NULL,": ");
+	if(pch==NULL){strcpy(uri,"");}
+	else strcpy(uri,pch);
+	
+	}
+	else{pch=strtok(dom,"/");strcpy(domain,pch);
+	pch=strtok(NULL,": ");
+	if(pch==NULL){strcpy(uri,"");}
+	else strcpy(uri,pch);
+	strcpy(protocol_type,"http");
+	}
+	int fd=con_server(domain,uri,protocol_type);
+	char bur[255];
+	strcpy(bur,req_type);
+	strcat(bur," /");strcat(bur,uri);strcat(bur," ");
+	strcat(bur,protocol);strcat(bur,"\r\nHost: ");strcat(bur,domain);strcat(bur,"\r\n\r\n");
+		
+	
+	i=write(fd,bur,strlen(bur));
+	if(i<0){printf("writing to server failed\n");exit(0);}
+	printf("written to server\n");
+	memset(buf,0,sizeof(buf));
+	i=read(fd,buf,sizeof(buf));
+	if(i<0){printf("reading from server failed\n");exit(0);}
+	//printf("Server result is: \n%s",buf);
+	i=write(clifd,buf,strlen(buf));
+	if(i<0){printf("writing to client failed\n");exit(0);}
+	printf("parsed items are domain,uri,port,http:%s,%s,%s,%s\n",domain,uri,protocol,protocol_type);
+	close(fd);
+	}
+	
+		/*
 		pch=strtok(buf," ");
 	if(strcasecmp(pch,"get")==0){
 		pch=strtok(NULL,"/ ");printf("domain:%s\n",pch);
@@ -126,6 +167,7 @@ int main(int argc,char **argv){
 		printf("port:%d\n",port);
 		pch=strtok(NULL," ");
 		strcpy(http,pch);no_url:
+		
 		printf("parsed items are domain,uri,port,size,http:%s,%s,%d,%d,%s\n",domain,uri,port,size,http);
 	
 	//connecting to server...
@@ -156,5 +198,7 @@ fff="GET / HTTP/1.1\r\n"
 	else{printf("Error in the format\n");i=write(clifd,"HTTP Error 400 Bad request\n",strlen("HTTP Error 400 Bad request\n"));
 	if(i<0){printf("writing to client failed\n");exit(0);} 
 	}
+	*/
+	
 close(clifd);
 }

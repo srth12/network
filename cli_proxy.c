@@ -37,7 +37,7 @@ exit(0);
 	i=write(sockfd,buf,sizeof(buf));
 	if(i<0){printf("error in writing\n");exit(0);}
 	i=read(sockfd,buf,sizeof(buf));
-	if(i<0){printf("error in reading\n");exit(0);}
+	if(i<0){printf("error in reading,,\n");exit(0);}
 			printf("%s",buf);
 	
 }

@@ -33,7 +33,7 @@ exit(0);
 }
 	printf("Enter url\n");
 	char url[50];
-	gets(url);snprintf(buf,sizeof(buf),"%s%s","GET ",url);
+	gets(url);snprintf(buf,sizeof(buf),"%s%s%s","GET ",url," HTTP/1.1");
 	i=write(sockfd,buf,sizeof(buf));
 	if(i<0){printf("error in writing\n");exit(0);}
 	i=read(sockfd,buf,sizeof(buf));
