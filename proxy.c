@@ -44,29 +44,9 @@ if(clifd<=0){printf("Errror in accept\n");exit(0);}
 }
 
 int con_server(char domain[50],char uri[50],int portno){
-/*
-char buf[255];
-
-int i; 
-int sockfd,n;struct sockaddr_in host;
 
 
-if((sockfd=socket(AF_INET,SOCK_STREAM,0))<0){
-printf("socket failed\n");}
-
-
-bzero(&host,sizeof(host));
-host.sin_family=AF_INET;
-host.sin_port=htons(portno);
-inet_pton(AF_INET,"74.125.135.102",&host.sin_addr);// assigning server address;
-
-if(connect(sockfd,(struct sockaddr*)&host,sizeof(host))<0){
-printf("connection failed\n");
-exit(0);
-}
-*/
-
-char buf[1024];
+char buf[1024000];
 
 int i; 
 int sockfd,n;struct sockaddr_in host;
@@ -114,38 +94,67 @@ int main(int argc,char **argv){
 	int portno=atoi(argv[1]);char *fff;
 	int clifd=con(portno);
 	printf("clifd is :%d\n",clifd);
-		int i;char buf[1024];
-		i=read(clifd,buf,sizeof(buf));	
-		if(i<0){printf("Error in reading 1st req");exit(0);}
-		char *pch;char domain[50],uri[50];int port;
+		int i;char buf[1024000],dup[1024000];
+		i=read(clifd,buf,sizeof(buf));	if(i<0){printf("Error in reading 1st req");exit(0);}
+		printf("input req is :%s\n",buf);
+		strcpy(dup,buf);
+		char *pch;char domain[50],uri[50],http[50];int port;
 		pch=strtok(buf," ");
 	if(strcasecmp(pch,"get")==0){
-		pch=strtok(NULL,"/");printf("domain:%s\n",pch);
+		pch=strtok(NULL,"/ ");printf("domain:%s\n",pch);
 		strcpy(domain,pch);// domain=pch;
-		pch=strtok(NULL,":");printf("uri:%s\n",pch);
-		strcpy(uri,pch);// uri=pch;
-		pch=strtok(NULL,"\n");int size;
-		if(pch==NULL){port=80;size=0;}
+		pch=strtok(NULL,"/ ");
+		
+		if(pch==NULL || (strcmp(pch,"HTTP")==0)){uri[50]="";
+		printf("eeeeeeeeee :%s\n",pch);
+		memset(uri,0,sizeof(uri));
+		port=80;
+		strcpy(http,"HTTP/1.1");
+		printf("eeeeeeeeee :%s\n",http);
+		goto no_url;
+		}
 		else{
+		printf("uri:%s\n",pch);
+		strcpy(uri,pch);// uri=pch;
+		}
+		pch=strtok(NULL,":");int size;
+		if(pch==NULL){port=80;size=0;}
+		else if((strcmp(pch,"HTTP/1.1")==0) || (strcmp(pch,"HTTP/1.0")==0))
+		{port=80;strcpy(http,"HTTP/1.1");goto no_url;}
+		else{printf("portddd:%s\n",pch);
 		port=atoi(pch);size=(int)strlen(pch);}
 		printf("port:%d\n",port);
-		printf("parsed items are:%s,%s,%d,%d\n",domain,uri,port,size);
+		pch=strtok(NULL," ");
+		strcpy(http,pch);no_url:
+		printf("parsed items are domain,uri,port,size,http:%s,%s,%d,%d,%s\n",domain,uri,port,size,http);
 	
 	//connecting to server...
 	int fd=con_server(domain,uri,port);	
 	//printf("Server result is: \n%d",fd);
-	
-	fff="GET /index.html HTTP/1.0 \n From: google.com \n\n";
-
-	i=write(fd,fff,strlen(fff));
+	//memset(fff,0,sizeof(fff));
+	//printf("merker \n");
+	char bur[255];
+	//snprintf(fff,sizeof(fff),"%s%s%s%s%s%s","GET ",domain,uri," HTTP/1.1\r\nHost: ",domain,"\r\n\r\n");
+	strcpy(bur,"GET ");
+	strcat(bur,domain);strcat(bur,"/");strcat(bur,uri);strcat(bur," HTTP/1.1\r\nHost: ");strcat(bur,domain);strcat(bur,"\r\n\r\n");
+fff="GET http://facebook.com/ HTTP/1.1\r\n"
+"Host: facebook.com\r\n"
+"\n\n";
+	printf("merged: \n%s",bur);
+	printf("non-merged: \n%s",fff);
+	//i=write(fd,bur,strlen(bur));
+	i=write(fd,bur,strlen(bur));
+	//i=write(fd,fff,strlen(fff));
 	if(i<0){printf("writing to server failed\n");exit(0);}
 	printf("written to server\n");
 	i=read(fd,buf,sizeof(buf));
 	if(i<0){printf("reading from server failed\n");exit(0);}
 	printf("Server result is: \n%s",buf);
 	i=write(clifd,buf,strlen(buf));
-	if(i<0){printf("writing to client failed\n");exit(0);}
+	if(i<0){printf("writing to client failed\n");exit(0);}close(fd);
 	}
-	else{printf("Error in the format\n");i=write(clifd,"Error in the format\n",strlen("Error in the format\n"));
-	if(i<0){printf("writing to client failed\n");exit(0);}}
+	else{printf("Error in the format\n");i=write(clifd,"HTTP Error 400 Bad request\n",strlen("HTTP Error 400 Bad request\n"));
+	if(i<0){printf("writing to client failed\n");exit(0);} 
+	}
+close(clifd);
 }
