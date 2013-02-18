@@ -58,7 +58,7 @@ memset(&hints, 0, sizeof hints);
 hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
 hints.ai_socktype = SOCK_STREAM;
 hints.ai_flags=AI_CANONNAME;
-if ((rv = getaddrinfo(domain,"80", &hints, &servinfo)) != 0) {
+if ((rv = getaddrinfo(domain,"https", &hints, &servinfo)) != 0) {
 fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 exit(1);
 }
@@ -136,20 +136,20 @@ int main(int argc,char **argv){
 	char bur[255];
 	//snprintf(fff,sizeof(fff),"%s%s%s%s%s%s","GET ",domain,uri," HTTP/1.1\r\nHost: ",domain,"\r\n\r\n");
 	strcpy(bur,"GET ");
-	strcat(bur,domain);strcat(bur,"/");strcat(bur,uri);strcat(bur," HTTP/1.1\r\nHost: ");strcat(bur,domain);strcat(bur,"\r\n\r\n");
-fff="GET http://facebook.com/ HTTP/1.1\r\n"
-"Host: facebook.com\r\n"
-"\n\n";
+	strcat(bur,"/");strcat(bur,uri);strcat(bur," HTTP/1.1\r\nHost: ");strcat(bur,domain);strcat(bur,"\r\n\r\n");
+fff="GET / HTTP/1.1\r\n"
+"Host: google.co.in\r\n"
+"\r\n";
 	printf("merged: \n%s",bur);
 	printf("non-merged: \n%s",fff);
 	//i=write(fd,bur,strlen(bur));
-	i=write(fd,buf,strlen(buf));
+	i=write(fd,bur,strlen(bur));
 	//i=write(fd,fff,strlen(fff));
 	if(i<0){printf("writing to server failed\n");exit(0);}
 	printf("written to server\n");
 	i=read(fd,buf,sizeof(buf));
 	if(i<0){printf("reading from server failed\n");exit(0);}
-	printf("Server result is: \n%s",buf);
+	//printf("Server result is: \n%s",buf);
 	i=write(clifd,buf,strlen(buf));
 	if(i<0){printf("writing to client failed\n");exit(0);}close(fd);
 	}
