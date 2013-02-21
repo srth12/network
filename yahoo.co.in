@@ -1,0 +1,14 @@
+HTTP/1.1 301 Moved Permanently
+Date: Thu, 21 Feb 2013 08:20:01 GMT
+P3P: policyref="http://info.yahoo.com/w3c/p3p.xml", CP="CAO DSP COR CUR ADM DEV TAI PSA PSD IVAi IVDi CONi TELo OTPi OUR DELi SAMi OTRi UNRi PUBi IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE LOC GOV"
+Cache-Control: max-age=3600, public
+Location: http://in.yahoo.com/
+Vary: Accept-Encoding
+Content-Type: text/html; charset=utf-8
+Age: 488
+Content-Length: 81
+Connection: keep-alive
+Via: HTTP/1.1 rc3.ops.sg3.yahoo.com (YahooTrafficServer/1.20.10 [cHs f ])
+Server: YTS/1.20.10
+
+<!-- rc3.ops.sg3.yahoo.com uncompressed/chunked Thu Feb 21 08:20:01 UTC 2013 -->

@@ -1,0 +1,16 @@
+HTTP/1.1 301 Moved Permanently
+Date: Thu, 21 Feb 2013 07:16:49 GMT
+Server: Apache
+Location: http://istenitc.org/esharing/
+Content-Length: 299
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>301 Moved Permanently</title>
+</head><body>
+<h1>Moved Permanently</h1>
+<p>The document has moved <a href="http://istenitc.org/esharing/">here</a>.</p>
+<hr>
+<address>Apache Server at istenitc.org Port 80</address>
+</body></html>

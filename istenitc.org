@@ -1,0 +1,127 @@
+HTTP/1.1 200 OK
+Date: Thu, 21 Feb 2013 08:26:15 GMT
+Server: Apache
+Accept-Ranges: bytes
+Vary: Accept-Encoding
+Content-Length: 9802
+Content-Type: text/html
+
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+
+<meta name="keywords" content="iste nitc, nitc, iste , technical education, Iste NITC, nit calicut" />
+<meta name="google-site-verification" content="YTcrozPkcIeeUUfCYzE_iFmOimGCQaMWpq5gqDeXMQI" />
+<meta name="description" content="" />
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<title>ISTE NITC Students' Chapter</title>
+
+<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'/>
+
+<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico"/>
+
+<link href='css/default.css' rel='stylesheet' type='text/css'/>
+
+<!--js for drop down menu-->
+<script type="text/javascript">
+var i=0;
+function fn(v){
+	
+     //document.write(v);
+	 if(window.XMLHttpRequest){
+	 xmlhttp= new XMLHttpRequest();
+	 }
+	 else{
+	xmlhttp=new ActiveXObject("Microsoft.XMLHttp");
+	}
+	
+	xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+   
+   xmlDoc=xmlhttp.responseXML;
+	var t=xmlDoc.getElementsByTagName("p"+v)[0].childNodes[0].nodeValue;
+	var zi=xmlDoc.getElementsByTagName("u"+v)[0].childNodes[0].nodeValue;
+	var rr=xmlDoc.getElementsByTagName("url"+v)[0].childNodes[0].nodeValue;
+	//document.write(rr);
+	var r=xmlDoc.getElementsByTagName("q"+v)[0].childNodes[0].nodeValue;
+	document.getElementById("heading").innerHTML=r;
+	document.getElementById("slide").innerHTML="<img src="+t+" style=' width:71%;height:85%' />";
+	document.getElementById("slidedown").innerHTML="<a href='./"+rr+"'>"+zi+"</a>";
+    }
+  }
+	xmlhttp.open("GET","imglib.xml",true);
+	xmlhttp.send();
+	//xmlDoc=xmlhttp.responseXML;
+//	var t=xmlDoc.getElementsByTagName("p"+v)[0].childNodes[0].nodeValue;
+	
+	//document.getElementById("slide").innerHTML="<img src="+t+" style='width:500px;height:100px' />";
+//	document.writeln(t.nodeValue);
+//document.write(t);
+
+}
+setInterval(function(){ fn(++i%3);},5000);
+</script>
+
+
+
+
+<!-- dd menu -->
+
+<script type="text/javascript">
+<!-- delaying scrolling-->
+function delay(h){
+	h.stop();
+}
+	
+		
+
+
+<!--
+
+var timeout         = 500;
+
+var closetimer		= 0;
+
+var ddmenuitem      = 0;
+
+
+
+// open hidden layer
+
+function mopen(id)
+
+{	
+
+	// cancel close timer
+
+	mcancelclosetime();
+
+
+
+	// close old layer
+
+	if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+
+
+
+	// get new layer and show it
+
+	ddmenuitem = document.getElementById(id);
+
+	ddmenuitem.style.visibility = 'visible';
+
+
+
+}
+
+// close sho

@@ -59,9 +59,9 @@ memset(&hints, 0, sizeof hints);
 hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
 hints.ai_socktype = SOCK_STREAM;
 hints.ai_flags=AI_CANONNAME;
-protocol_type[50]="80";
-if ((rv = getaddrinfo(domain,protocol_type, &hints, &servinfo)) != 0) {
-//if ((rv = getaddrinfo(domain,"443", &hints, &servinfo)) != 0) {
+//protocol_type[50]="80";
+//if ((rv = getaddrinfo(domain,protocol_type, &hints, &servinfo)) != 0) {
+if ((rv = getaddrinfo(domain,"80", &hints, &servinfo)) != 0) {
 fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 exit(1);
 }
@@ -92,12 +92,28 @@ printf("connecting to server successfull,%d\n",sockfd);
 return sockfd;
 }
 
+char* remove_slashes(char uri[100]){
+char temp[100],*pch;printf("----%s\n",uri);
+if(strcmp(uri,"")==0)
+return "";
+pch=strtok(uri,"/");
+strcpy(temp,pch);
+while((pch=strtok(NULL,"/")) !=NULL){
+strcat(temp,pch);
+}
+printf("----%s\n",temp);
+
+return temp;
+}
+
+
+
 int main(int argc,char **argv){
 	if(argc!=2){printf("Input format expected is %s <port>",argv[0]);exit(0);}
 	int portno=atoi(argv[1]);char *fff;
 	int clifd=con(portno);
 	printf("clifd is :%d\n",clifd);
-	while(1){
+	
 		int i;char buf[1024000],dup[1024000];
 		i=read(clifd,buf,sizeof(buf));	if(i<0){printf("Error in reading 1st req");exit(0);}
 		printf("input req is :%s\n",buf);
@@ -122,7 +138,27 @@ int main(int argc,char **argv){
 	else strcpy(uri,pch);
 	strcpy(protocol_type,"http");
 	}
+	
+	char *tweet;char filename[1000],dup_uri[50];
+	strcpy(dup_uri,uri);
+	tweet=remove_slashes(dup_uri);
+	printf("Removed uri :%s\n",tweet);
+	strcpy(filename,domain);	strcat(filename,tweet);
+	// trying to check if the file is in cache
+	FILE *fp;char line[1024];
+	fp=fopen(filename,"r");if(fp==NULL){printf("cache file not available\n");}
+	else{memset(buf,0,sizeof(buf));
+	while(fgets(line,sizeof(line),fp) !=NULL){
+	strcat(buf,line);
+	}
+	
+	goto cache_is_there;fclose(fp);
+	}
+	// saving file ends here
+	
 	int fd=con_server(domain,uri,protocol_type);
+	
+	
 	char bur[255];
 	strcpy(bur,req_type);
 	strcat(bur," /");strcat(bur,uri);strcat(bur," ");
@@ -138,8 +174,24 @@ int main(int argc,char **argv){
 	//printf("Server result is: \n%s",buf);
 	i=write(clifd,buf,strlen(buf));
 	if(i<0){printf("writing to client failed\n");exit(0);}
+	//writing file for caching
+	FILE *fp1=fopen(filename,"a+");
+	int ty=fputs(buf,fp1);
+	if(ty==EOF){printf("Error in writing to file teh page\n");}
+	
+	fclose(fp1);
+	
+	//cache write ends here
 	printf("parsed items are domain,uri,port,http:%s,%s,%s,%s\n",domain,uri,protocol,protocol_type);
+	 goto no_cache;
+	
+	cache_is_there:
+	i=write(clifd,buf,strlen(buf));
+	if(i<0){printf("writing to client failed\n");exit(0);}
+	printf("parsed items are domain,uri,port,http:%s,%s,%s,%s\n",domain,uri,protocol,protocol_type);
+	no_cache:
 	close(fd);
+	
 	}
 	
 		/*
@@ -202,7 +254,7 @@ fff="GET / HTTP/1.1\r\n"
 	if(i<0){printf("writing to client failed\n");exit(0);} 
 	}
 	*/
-}	
+	
 close(clifd);
 
 }
